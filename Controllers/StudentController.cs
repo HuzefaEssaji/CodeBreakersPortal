@@ -1,4 +1,5 @@
 ﻿using Google.Cloud.Firestore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Source.Models;
 using System;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Source.Controllers
 {
+    [Authorize]
     public class StudentController : Controller
     {
         private string project = "codebreakers-f72cc";
@@ -15,7 +17,6 @@ namespace Source.Controllers
         public async Task<IActionResult> StudentAsync(UserModel userModel)
         {
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
-
             FirestoreDb db = FirestoreDb.Create(project);
 
             CollectionReference usersRef = db.Collection("Student");
@@ -26,7 +27,7 @@ namespace Source.Controllers
             foreach (var item in snapshot.Documents)
             {
                 Dictionary<string, object> documentDictionary = item.ToDictionary();
-                if (userModel.Email.Equals(documentDictionary["Email"]))
+                if (userModel.Email.Equals((string)documentDictionary["Email"]))
                 {
                     studentModel.Email = (string)documentDictionary["Email"];
                     studentModel.Name = (string)documentDictionary["Name"];

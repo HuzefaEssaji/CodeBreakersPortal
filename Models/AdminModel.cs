@@ -14,6 +14,8 @@ namespace Source.Models
 
         public string Department { get; set; }
 
+        public string Email { get; set; }
+
         public string StudentEmail { get; set; }
 
         public string UpdateTask { get; set; }

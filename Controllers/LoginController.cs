@@ -1,9 +1,12 @@
 ﻿using Google.Cloud.Firestore;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Source.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Source.Controllers
@@ -17,6 +20,7 @@ namespace Source.Controllers
             return View();
         }
 
+        [HttpPost]
         public async Task<IActionResult> LoginProcessAsync(UserModel userModel)
         {
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
@@ -29,17 +33,40 @@ namespace Source.Controllers
             foreach (DocumentSnapshot document in snapshot.Documents)
             {
                 Dictionary<string, object> documentDictionary = document.ToDictionary();
-                if (userModel.Email.Equals(documentDictionary["Email"]) && userModel.Password.Equals(documentDictionary["Password"]))
+                if (userModel.Email.ToString().Equals(documentDictionary["Email"]) && userModel.Password.ToString().Equals(documentDictionary["Password"]))
                 {
+
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, userModel.Email)
+                    };
+
+                    var identity = new ClaimsIdentity(
+                        claims,
+                        CookieAuthenticationDefaults.AuthenticationScheme
+                        );
+                    var principal = new ClaimsPrincipal(identity);
+                    var prop = new AuthenticationProperties();
+                    HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        principal,
+                        prop
+                        ).Wait();
+
+
                     switch ((string)documentDictionary["Role"])
                     {
                         case "student":
                             {
-                                return RedirectToAction("Student", userModel);
+                                return RedirectToAction("Student", "Student" ,userModel);
                             }
                         case "admin":
                             {
-                                return RedirectToAction("Admin", userModel);
+                                return RedirectToAction("Admin", "Admin" ,userModel);
+                            }
+                        case "super":
+                            {
+                                return RedirectToAction("Super", "Super");
                             }
                         default:
                             break;
