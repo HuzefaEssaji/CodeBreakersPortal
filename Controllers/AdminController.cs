@@ -84,6 +84,9 @@ namespace Source.Controllers
                             { "Task", admin.UpdateTask },
                         };
                     await docRef.SetAsync(newTask, SetOptions.MergeAll);
+
+                    EmailNotification.studentTask(admin);
+
                     return View("Admin", adminModel);
                 }
             }

@@ -42,10 +42,12 @@ namespace Source.Controllers
 
             if (userModel.Role.ToLower().Equals("admin"))
             {
+                EmailNotification.newUser(userModel);
                 return View("CreateAdmin");
             }
             else if (userModel.Role.ToLower().Equals("student"))
             {
+                EmailNotification.newUser(userModel);
                 return View("CreateStudent");
             }
             return RedirectToAction("Error", "Home");
