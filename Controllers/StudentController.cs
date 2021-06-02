@@ -1,10 +1,15 @@
-﻿using Google.Cloud.Firestore;
+﻿using Firebase.Auth;
+using Firebase.Storage;
+using Google.Cloud.Firestore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Source.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Source.Controllers
@@ -44,5 +49,6 @@ namespace Source.Controllers
 
             return RedirectToAction("Error","Home");
         }
+
     }
 }

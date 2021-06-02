@@ -3,6 +3,7 @@ using Google.Cloud.Firestore;
 using java.rmi.server;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Source.Models;
 using System;
@@ -22,6 +23,7 @@ namespace Source.Controllers
             return View();
         }
 
+        [HttpPost]
         public async Task<IActionResult> LoginProcessAsync(UserModel userModel)
         {
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
@@ -36,6 +38,7 @@ namespace Source.Controllers
                 Dictionary<string, object> documentDictionary = document.ToDictionary();
                 if (userModel.Email.ToString().Equals((string)documentDictionary["Email"]) && userModel.Password.ToString().Equals((string)documentDictionary["Password"]))
                 {
+                    HttpContext.Session.SetString("username", userModel.Email);
                     switch ((string)documentDictionary["Role"])
                     {
                         case "student":
@@ -67,6 +70,7 @@ namespace Source.Controllers
             Authorization.isAdmin = false;
             Authorization.isStudent = false;
             Authorization.isSuper = false;
+            HttpContext.Session.Remove("username");
             return RedirectToAction("Index", "Home");
         }
     }
