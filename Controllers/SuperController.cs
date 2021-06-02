@@ -1,4 +1,5 @@
-﻿using Google.Cloud.Firestore;
+﻿using FirebaseAdmin.Auth;
+using Google.Cloud.Firestore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Source.Models;
@@ -9,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace Source.Controllers
 {
-    [Authorize]
     public class SuperController : Controller
     {
         private string project = "codebreakers-f72cc";
@@ -17,7 +17,10 @@ namespace Source.Controllers
 
         public IActionResult Super()
         {
-            return View();
+            if(Authorization.isSuper)
+                return View();
+
+            return RedirectToAction("Error", "Home");
         }
 
         public async Task<IActionResult> SuperRouteAsync(UserModel userModel)

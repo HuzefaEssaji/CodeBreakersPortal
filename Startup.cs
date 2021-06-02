@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -9,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace Source
 {
@@ -25,19 +23,7 @@ namespace Source
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.ConfigureApplicationCookie(config =>
-            //{
-            //    config.Cookie.Name = "Love.Cookie";
-            //    config.LoginPath = "/Login/Login";
-            //});
-
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(config =>
-                {
-                    config.LoginPath = "/Login/Login";
-                    config.Cookie.Name = "Muli.Cookie";
-                });
-            services.AddMvc();
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,21 +42,15 @@ namespace Source
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-
             app.UseRouting();
 
-            app.UseAuthentication();
-
             app.UseAuthorization();
-            
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}"
-                    //defaults: new { controller = "Product", action = "Details", id = UrlParameter.Optional }
-                    );
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

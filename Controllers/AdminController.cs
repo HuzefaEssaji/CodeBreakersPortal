@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace Source.Controllers
 {
-    [Authorize]
     public class AdminController : Controller
     {
         private string project = "codebreakers-f72cc";
@@ -17,25 +16,28 @@ namespace Source.Controllers
         private AdminModel adminModel = new();
         public async Task<IActionResult> AdminAsync(UserModel userModel)
         {
-            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
-
-            FirestoreDb db = FirestoreDb.Create(project);
-
-            CollectionReference usersRef = db.Collection("Admin");
-            QuerySnapshot snapshot = await usersRef.GetSnapshotAsync();
-
-
-            foreach (var item in snapshot.Documents)
+            if (Authorization.isAdmin)
             {
-                Dictionary<string, object> documentDictionary = item.ToDictionary();
-                if (userModel.Email.Equals((string)documentDictionary["Email"]))
+                Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
+
+                FirestoreDb db = FirestoreDb.Create(project);
+
+                CollectionReference usersRef = db.Collection("Admin");
+                QuerySnapshot snapshot = await usersRef.GetSnapshotAsync();
+
+
+                foreach (var item in snapshot.Documents)
                 {
-                    adminModel.Name = (string)documentDictionary["Name"];
-                    adminModel.Email = (string)documentDictionary["Email"];
-                    adminModel.Department = (string)documentDictionary["Department"];
-                    adminModel.PhoneNo = (string)documentDictionary["PhoneNo"];
-                    return View(adminModel);
-                }
+                    Dictionary<string, object> documentDictionary = item.ToDictionary();
+                    if (userModel.Email.Equals((string)documentDictionary["Email"]))
+                    {
+                        adminModel.Name = (string)documentDictionary["Name"];
+                        adminModel.Email = (string)documentDictionary["Email"];
+                        adminModel.Department = (string)documentDictionary["Department"];
+                        adminModel.PhoneNo = (string)documentDictionary["PhoneNo"];
+                        return View(adminModel);
+                    }
+                } 
             }
             return RedirectToAction("Error", "Home");
         }
