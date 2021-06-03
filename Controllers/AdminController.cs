@@ -70,9 +70,6 @@ namespace Source.Controllers
                 }
             }
 
-
-
-
             foreach (var item in snapshot.Documents)
             {
                 DocumentReference docRef = db.Collection("Student").Document(admin.StudentEmail);
@@ -92,6 +89,11 @@ namespace Source.Controllers
             }
 
             return RedirectToAction("Error", "Home");
+        }
+
+        public IActionResult Search()
+        {
+            return View();
         }
     }
 }

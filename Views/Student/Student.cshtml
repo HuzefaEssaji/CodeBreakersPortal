@@ -36,6 +36,25 @@
         </dd>
     </dl>
 
+    <h4> Upload Task File</h4>
+    <form method="post" enctype="multipart/form-data" asp-controller="Student" asp-action="Upload">
+        <div class="form-group">
+            <label asp-for="Email" class="control-label"></label>
+            <input asp-for="Email" class="form-control" name="email" />
+        </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="file" name="files" multiple />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-5">
+                <input class="btn-outline-dark" type="submit" value="Upload" />
+            </div>
+        </div>
+    </form>
+
+
 </div>
 
 

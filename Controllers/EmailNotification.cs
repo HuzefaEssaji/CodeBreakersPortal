@@ -15,16 +15,16 @@ namespace Source.Controllers
         {
             var mailMessage = new MimeMessage();
             mailMessage.From.Add(new MailboxAddress("The CodeBreakers", "thecodebreakers.rcoem@gmail.com"));
-            mailMessage.To.Add(new MailboxAddress(adminModel.Email, adminModel.Email));
+            mailMessage.To.Add(new MailboxAddress(adminModel.StudentEmail, adminModel.StudentEmail));
             mailMessage.Subject = "New Task Allotted";
             mailMessage.Body = new TextPart("plain")
             {
-                Text = adminModel.UpdateTask + "\nCheck out the new task allotted to you at www.codebreakers.somee.com"
+                Text = " Task : " + adminModel.UpdateTask + "\n\nCheck out the new task allotted to you at www.codebreakers.somee.com"
             };
 
             using (var smtpClient = new SmtpClient())
             {
-                smtpClient.Connect("smtp.gmail.com", 587, true);
+                smtpClient.Connect("smtp.gmail.com", 465, true);
                 smtpClient.Authenticate("thecodebreakers.rcoem@gmail.com", "Thecodebreakers#rcoem");
                 smtpClient.Send(mailMessage);
                 smtpClient.Disconnect(true);
@@ -40,15 +40,15 @@ namespace Source.Controllers
             mailMessage.Body = new TextPart("plain")
             {
                 Text = "Welcome, to the Team CodeBreakers." +
-                "\n Here are your credentials" +
-                "\n Username:" + userModel.Email +
-                "\n Password:" + userModel.Password +
-                "\n Role: " + userModel.Role
+                "\n\n Here are your credentials" +
+                "\n\n Username:  " + userModel.Email +
+                "\n\n Password:   " + userModel.Password +
+                "\n\n Role: " + userModel.Role
             };
 
             using (var smtpClient = new SmtpClient())
             {
-                smtpClient.Connect("smtp.gmail.com", 587, true);
+                smtpClient.Connect("smtp.gmail.com", 465, true);
                 smtpClient.Authenticate("thecodebreakers.rcoem@gmail.com", "Thecodebreakers#rcoem");
                 smtpClient.Send(mailMessage);
                 smtpClient.Disconnect(true);
